@@ -30,7 +30,7 @@ services:
 
   prometheus:
     container_name: prometheus
-    image: prom/prometheus
+    image: prom/prometheus:v2.27.1
     restart: always
     volumes:
       - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
@@ -40,7 +40,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana
+    image: grafana/grafana:7.5.7
     restart: always
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true

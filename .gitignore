@@ -3,3 +3,4 @@ prometheus/data/*
 .DS_Store
 pihole/etc-dnsmasq.d/*
 pihole/etc-pihole
+pihole/youTube_ads_4_pi-hole/
