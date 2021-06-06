@@ -6,7 +6,10 @@ services:
     image: pihole/pihole:v5.8.1
     restart: always
     ports:
-      - 80:80
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
     environment:
       TZ: 'Asia/Amman' # Put your own timezone here.
       WEBPASSWORD: 'admin123' # Put a strong password here.
