@@ -1,0 +1,5 @@
+grafana/data/*
+prometheus/data/*
+.DS_Store
+pihole/etc-dnsmasq.d/*
+pihole/etc-pihole

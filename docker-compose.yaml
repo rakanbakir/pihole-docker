@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:v5.8.1
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      TZ: 'Asia/Amman' # Put your own timezone here.
+      WEBPASSWORD: 'admin123' # Put a strong password here.
+    volumes:
+      - './pihole/etc-pihole/:/etc/pihole/'
+      - './pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    cap_add:
+      - NET_ADMIN
+
+  pihole-exporter:
+    container_name: pihole-exporter
+    image: ekofr/pihole-exporter:v0.0.11
+    restart: always
+    environment:
+      PIHOLE_HOSTNAME: 'pihole'
+      PIHOLE_PASSWORD: ''
+      INTERVAL: '30s'
+      PORT: '9617'
+    depends_on:
+      - pihole
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: always
+    volumes:
+      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - './prometheus/data/:/prometheus/'
+    ports:
+      - 9090:9090
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: always
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/grafana-provisioning/dashboards/:/etc/grafana/provisioning/dashboards/
+      - ./grafana/grafana-provisioning/datasources/:/etc/grafana/provisioning/datasources/
+      - ./grafana/pi-hole-exporter_rev3.json:/var/lib/grafana/dashboards/pi-hole-exporter_rev3.json
+      - ./grafana/data/:/var/lib/grafana/
+    depends_on:
+      - pihole
